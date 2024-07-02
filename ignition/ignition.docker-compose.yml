@@ -1,0 +1,39 @@
+# https://www.docs.inductiveautomation.com/docs/8.1/platform/docker-image
+
+services:
+  # Ignition Gateway
+  gateway:
+    image: inductiveautomation/ignition:8.1.39
+    ports:
+      - 8088:8088
+      - 8043:8043
+      - 1884:1884
+    volumes:
+      - gw-data:/usr/local/bin/ignition/
+    # env_file: ignition.env  # optionally specify variables in a file, or using `environment:` below
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "30m"
+        max-file: "3"
+    environment:
+      - ACCEPT_IGNITION_EULA=Y
+      - IGNITION_EDITION=standard
+      - TZ=America/Chicago # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+      - ACCEPT_IGNITION_EULA=Y
+      #- GATEWAY_ADMIN_USERNAME=admin
+      #- GATEWAY_ADMIN_PASSWORD=admin
+      #- GATEWAY_HTTP_PORT=8088
+      #- GATEWAY_HTTPS_PORT=8043
+      #- GATEWAY_GAN_PORT=8060 # Ignition Gateway Area Network port
+      #- IGNITION_EDITION=standard/edge/maker
+      #- IGNITION_LICENSE_KEY=XXXX-XXXX,YYYY-YYYY,ZZZZ-ZZZZ
+    command: >
+      -n <NAME_OF_GATEWAY>
+      -m <MAX_JVM_MEMORY>
+      --
+      wrapper.java.initmemory=512
+      -Dignition.allowunsignedmodules=true
+    restart: always
+volumes:
+  gw-data:
