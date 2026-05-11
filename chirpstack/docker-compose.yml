@@ -42,22 +42,6 @@ services:
       - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=us915_0/gateway/{{ .GatewayID }}/command/#
     depends_on:
       - mosquitto
-  
-  chirpstack-gateway-bridge-basicstation:
-    image: chirpstack/chirpstack-gateway-bridge:4
-    restart: unless-stopped
-    command: -c /etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-us915_0.toml
-    ports:
-      - 3001:3001
-    volumes:
-      - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"  
-        max-file: "3"
-    depends_on:
-      - mosquitto
 
   chirpstack-rest-api:
     image: chirpstack/chirpstack-rest-api:4
